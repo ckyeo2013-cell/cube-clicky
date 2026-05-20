@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let debugPassword = "DaxtonLikes5Ants";
   let debugUsedThisRun = false;
   let debugEnabled = false;
+  let gameActive = true;
 
   let newRecordTriggered = false;
 
@@ -261,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clearInterval(countdown);
 
     countdown = setInterval(function () {
-      timeLeft--;
+      timeLeft = Math.max(0, timeLeft - 1);
       if (timerElement) timerElement.innerText = timeLeft;
 
       if (timeLeft <= 0) {
@@ -273,6 +274,20 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Time's up! Score: " + score);
       }
     }, 1000);
+
+   if (timeLeft <= 0) {
+     timeLeft = 0;
+     gameActive = false;
+
+     if (timerElement) timerElement.innerText = timeLeft;
+
+     clearInterval(countdown);
+
+     if (box) box.style.display = "none";
+     if (resetbutton) resetbutton.style.display = "block";
+
+     alert("Time's up! Score: " + score);
+   }
   }
 
   // ---------------- RESET ----------------
@@ -312,12 +327,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setTimeout(spawnCube, 1200);
 
-        timeLeft--;
-        if (timerElement) timerElement.innerText = timeLeft;
+        if (gameActive) {
 
-        sadTrumpet.currentTime = 0;
-        sadTrumpet.volume = 0.6;
-        sadTrumpet.play();
+          timeLeft--;
+          if (timerElement) timerElement.innerText = timeLeft;
+
+          sadTrumpet.currentTime = 0;
+          sadTrumpet.volume = 1;
+          sadTrumpet.play().catch(err => console.log("sound blocked:", err));
+        }
       }
     });
 
