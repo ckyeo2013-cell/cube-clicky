@@ -40,10 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
   let resetbutton = document.getElementById("resetbuttom");
   let gameArea = document.getElementById("gameArea");
   let debugPanel = document.getElementById("debugPanel");
+  let subtitles = document.getElementById("subtitle");
 
   // ---------------- SOUNDS ----------------
   let clapSound = new Audio("assets/sounds/clap.m4a");
   let sadTrumpet = new Audio("assets/sounds/sadtrumpet.mp3");
+  let uhOh = new Audio ("assets/sounds/uh_oh.mp3");
 
   // ---------------- HIGH SCORE LOAD ----------------
   let savedHigh = localStorage.getItem("highScore");
@@ -69,50 +71,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
   applyTheme();
 
+  //----------------uhh i forgot, oh, good looking transitions
+
+  function goToPage(url) {
+  document.body.classList.add("fade-out");
+
+  setTimeout(() => {
+    window.location.href = url;
+  }, 500);
+}
+
   // ---------------- DEBUG ----------------
   window.enterDebug = function () {
-    let input = document.getElementById("debugInput");
-    if (!input) return;
+  let input = document.getElementById("debugInput");
+  if (!input) return;
 
-    let value = input.value.trim();
+  let value = input.value.trim();
 
-    if (value === debugPassword) {
-      debugUsedThisRun = true;
-      debugPanel.style.display = "block";
-      alert("Debug unlocked, have fun :)");
-    } else {
-      alert("Wrong password HAHAHHAHA");
-    }
+  if (value === debugPassword) {
 
-    input.value = "";
-  };
+    debugUsedThisRun = true;
+    debugPanel.style.display = "block";
 
-  window.toggleDebug = function () {
-    debugEnabled = !debugEnabled;
-    if (debugEnabled) debugUsedThisRun = true;
+    alert("Debug unlocked, have fun :)");
 
-    let btn = document.querySelector("#debugPanel button");
-    if (btn) {
-      btn.innerText = debugEnabled ? "Debug: ON" : "Debug: OFF";
-    }
-  };
+  } else if (value === (String(high_score) + "cube")) {
 
-  window.setMode = function (mode) {
-    if (!debugEnabled) return;
-    forceMode = mode;
-  };
+    debugUsedThisRun = false;
+    debugEnabled = false;
+    debugPanel.style.display = "none";
 
-  // ---------------- RESET HIGH SCORE ----------------
-  window.resetHighScore = function () {
-    high_score = 0;
-    localStorage.setItem("highScore", "0");
+    subtitles.innerText = "Uh oh, whats that rumbling?";
+    subtitles.style.opacity = 1;
 
-    if (highScoreDisplay) {
-      highScoreDisplay.innerText = "0";
-    }
+    uhOh.currentTime = 0;
+    uhOh.volume = 0.9;
+    uhOh.play();
 
-    alert("high score reset lol");
-  };
+    setTimeout(() => {
+      document.body.classList.add("fade-out");
+
+      setTimeout(() => {
+        window.location.href = "boss/boss.html";
+      }, 600);
+
+    }, 5000);
+
+  } else {
+    alert("Wrong password HAHAHHAHA");
+  }
+
+  input.value = "";
+};
 
   // ---------------- SET HIGH SCORE ----------------
   window.setHighScore = function (value) {
@@ -257,39 +267,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function resetCubeVisualOnly() {
+  if (!box) return;
+
+  if (boxType === "green") {
+    box.style.backgroundColor = "lime";
+    box.style.boxShadow = "0 0 20px green";
+    box.textContent = ":O";
+
+  } else if (boxType === "gold") {
+    box.style.backgroundColor = "gold";
+    box.style.boxShadow = "0 0 20px gold";
+    box.textContent = ":O";
+
+  } else {
+    box.style.backgroundColor = "blue";
+    box.style.boxShadow = "0 0 15px rgba(0,100,255,0.5)";
+    box.textContent = ":)";
+  }
+}
+
   // ---------------- TIMER ----------------
   function startTimer() {
     clearInterval(countdown);
 
-    countdown = setInterval(function () {
-      timeLeft = Math.max(0, timeLeft - 1);
+    gameActive = true;
+
+    countdown = setInterval(() => {
+
+      timeLeft--;
       if (timerElement) timerElement.innerText = timeLeft;
 
       if (timeLeft <= 0) {
-        clearInterval(countdown);
-
-        if (box) box.style.display = "none";
-        if (resetbutton) resetbutton.style.display = "block";
-
-        alert("Time's up! Score: " + score);
+        timeLeft = 0;
+        endGame();
       }
+
     }, 1000);
-
-   if (timeLeft <= 0) {
-     timeLeft = 0;
-     gameActive = false;
-
-     if (timerElement) timerElement.innerText = timeLeft;
-
-     clearInterval(countdown);
-
-     if (box) box.style.display = "none";
-     if (resetbutton) resetbutton.style.display = "block";
-
-     alert("Time's up! Score: " + score);
-   }
   }
-
   // ---------------- RESET ----------------
   function reset() {
     clearInterval(countdown);
@@ -316,6 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.reset = reset;
 
+  
   // ---------------- CLICK SYSTEM ----------------
   if (gameArea && box) {
     gameArea.addEventListener("click", function (event) {
@@ -325,11 +341,14 @@ document.addEventListener("DOMContentLoaded", function () {
         box.style.boxShadow = "0 0 20px red";
         box.textContent = ">:(";
 
-        setTimeout(spawnCube, 1200);
+        setTimeout(() => {
+          resetCubeVisualOnly();
+        }, 1200);
 
         if (gameActive) {
 
-          timeLeft--;
+          timeLeft = Math.max(0, timeLeft - 1);
+
           if (timerElement) timerElement.innerText = timeLeft;
 
           sadTrumpet.currentTime = 0;
@@ -361,6 +380,20 @@ document.addEventListener("DOMContentLoaded", function () {
       updateHighScore();
       spawnCube();
     });
+  }
+
+  //----------------end game yaaayyyy--------
+
+  function endGame() {
+    gameActive = false;
+    clearInterval(countdown);
+
+    if (box) box.style.display = "none";
+    if (resetbutton) resetbutton.style.display = "block";
+
+    if (timerElement) timerElement.innerText = "0";
+
+    alert("Time's up! Score: " + score);
   }
 
   // ---------------- START ----------------

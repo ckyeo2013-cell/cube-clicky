@@ -25,7 +25,6 @@
 
     <p>The highest score in the game, was 366! Daxton holds this record!!</p>
 
-    <button id="resetbuttom" onclick="reset()">Reset</button>
   </div>
 
   <!-- 💥 SIDE PANEL -->
@@ -33,8 +32,8 @@
 
     <input id="debugInput" type="password" placeholder="Enter debug password">
     <button onclick="enterDebug()">Submit</button>
-
     <button onclick="resetHighScore()">Reset High Score</button>
+    <button id="resetbuttom" onclick="reset()" style="display:none;">Reset</button>
 
     <br><br>
 
@@ -62,6 +61,8 @@
   </div>
 
 </div>
+
+<div id="subtitle"></div>
 
 <script src="script.js"></script>
 
