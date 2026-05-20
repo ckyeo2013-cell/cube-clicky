@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ---------------- SOUNDS ----------------
   let clapSound = new Audio("assets/sounds/clap.m4a");
-  let sadTrumpet = new Audio("assets/sounds/sadTrumpet.mp3");
+  let sadTrumpet = new Audio("assets/sounds/sadtrumpet.mp3");
 
   // ---------------- HIGH SCORE LOAD ----------------
   let savedHigh = localStorage.getItem("highScore");
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let num = Number(value);
 
     if (isNaN(num)) {
-      alert("not a number bro 💀");
+      alert("not a number bro HAHHAHA");
       return;
     }
 
