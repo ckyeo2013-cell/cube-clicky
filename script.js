@@ -125,6 +125,19 @@ document.addEventListener("DOMContentLoaded", function () {
   input.value = "";
 };
 
+  // ---------------- TOGGLE DEBUG ON/OFF ----------------
+  window.toggleDebug = function () {
+    debugEnabled = !debugEnabled;
+    if (debugEnabled) debugUsedThisRun = true;
+
+    alert(debugEnabled ? "Debug unlocked, have fun :)" : "Debug turned off");
+
+    let btn = document.querySelector("#debugPanel button");
+    if (btn) {
+      btn.innerText = debugEnabled ? "Debug: ON" : "Debug: OFF";
+    }
+  };
+
   // ---------------- SET HIGH SCORE ----------------
   window.setHighScore = function (value) {
     if (!debugEnabled) return;
