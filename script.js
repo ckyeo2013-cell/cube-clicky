@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let box = document.getElementById("box");
   let scoreDisplay = document.getElementById("score");
   let highScoreDisplay = document.getElementById("high_score");
-  let resetbutton = document.getElementById("resetbuttom");
+  let resetbutton = document.getElementById("resetbutton");
   let gameArea = document.getElementById("gameArea");
   let debugPanel = document.getElementById("debugPanel");
   let subtitles = document.getElementById("subtitle");
@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (value === debugPassword) {
 
     debugUsedThisRun = true;
+    debugEnabled = true;
     debugPanel.style.display = "block";
 
     alert("Debug unlocked, have fun :)");
@@ -143,6 +144,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     alert("set high score to " + num);
+  };
+
+  // ---------------- FORCE CUBE MODE (debug only) ----------------
+  window.setMode = function (mode) {
+    if (!debugEnabled) return;
+    forceMode = mode;
   };
 
   // ---------------- CONFETTI ----------------
@@ -331,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.reset = reset;
 
-  
+
   // ---------------- CLICK SYSTEM ----------------
   if (gameArea && box) {
     gameArea.addEventListener("click", function (event) {
