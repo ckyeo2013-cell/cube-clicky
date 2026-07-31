@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let box = document.getElementById("box");
   let scoreDisplay = document.getElementById("score");
   let highScoreDisplay = document.getElementById("high_score");
-  let resetbutton = document.getElementById("resetbutton");
+  let resetbutton = document.getElementById("resetbuttom");
   let gameArea = document.getElementById("gameArea");
   let debugPanel = document.getElementById("debugPanel");
   let subtitles = document.getElementById("subtitle");
